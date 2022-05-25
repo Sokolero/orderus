@@ -5,6 +5,15 @@ const Day = ({ date }) => {
   return <div className={styles.day}>{date.getDate() + 1}</div>;
 };
 
+const getPastDate = (date, countDays) => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours() - 24 * countDays
+  );
+};
+
 const getBeginDate = () => {
   const date = new Date();
 
@@ -14,10 +23,13 @@ const getBeginDate = () => {
     year: date.getFullYear()
   };
   const firstDayDate = new Date(nowDate.year, nowDate.month, 1);
-  const firstDayNumber = firstDayDate.getDay();
-  console.log(firstDayNumber);
-  const firstDayDateMs = firstDayDate.getMilliseconds();
-  return new Date(firstDayDateMs - firstDayNumber * 8.64e7);
+  const countToMonday =
+    firstDayDate.getDay() !== 0 ? firstDayDate.getDate() - 1 : 6;
+  //
+  // console.log(firstDayNumber);
+  const pd = getPastDate(firstDayDate, countToMonday);
+  // console.log(pd);
+  return pd;
 };
 
 const getDatesList = () => {
@@ -25,12 +37,9 @@ const getDatesList = () => {
   console.log(beginDate.getDate());
   const dateList = [];
   dateList.push(beginDate);
-  let currentMsValue = beginDate.getMilliseconds();
 
   for (let i = 1; i < 42; i += 1) {
-    currentMsValue += 8.64e7;
-    const nextDate = new Date(currentMsValue);
-
+    const nextDate = new Date(beginDate.getFullYear(), beginDate.getMonth());
     dateList.push(nextDate);
   }
 
